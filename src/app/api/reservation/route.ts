@@ -1,6 +1,7 @@
 import { ReservationType } from "@/features/reservations/types/ReservationType";
 import { ReservationServerServices } from "@/features/reservations/services/reservation.server";
 import { NextResponse } from "next/server";
+import { redis } from "@/shared/lib/redis";
 
 
 export async function POST(req: Request){
@@ -30,3 +31,36 @@ export async function POST(req: Request){
     }
 
 }
+
+
+export async function GET(){
+    try {
+
+        const cache = await redis.get('reservations')
+
+        if(cache){
+            return NextResponse.json(
+                { message: "Reservations fetched successfully", reservations: cache },
+                { status: 200 }
+            )
+        }
+
+        const reservations = await ReservationServerServices.getAllReservations();
+
+        await redis.set('reservations', reservations, { ex: 60 } )
+ 
+        return NextResponse.json(
+            { message: "Reservations fetched successfully", reservations },
+            { status: 200 }
+        )
+        
+    } catch (err) {
+        console.error("Failed to fetch reservations:", err);
+        return NextResponse.json(
+            { message: "Internal Server Error", error: err },
+            { status: 500 }
+        )
+    }
+
+}
+
