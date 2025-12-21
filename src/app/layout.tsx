@@ -1,20 +1,11 @@
-import type { Metadata } from "next";
 import "./globals.css";
+import { Providers } from "./provider";
 
-export const metadata: Metadata = {
-  title: "Marked By Francene",
-  description: "",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
   return (
     <html lang="en">
       <body>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
