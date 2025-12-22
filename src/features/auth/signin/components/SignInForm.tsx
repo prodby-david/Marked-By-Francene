@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, Lock, ArrowRight } from "lucide-react";
+import { Mail, Lock } from "lucide-react";
 import BackButton from "@/shared/components/buttons/BackButton";
 import Link from "next/link";
 import { useState } from "react";
@@ -92,11 +92,11 @@ export function SignInFormUI() {
   return (
     <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 relative">
 
-      <div className="absolute top-4 left-5">
+      <div className="absolute top-3 left-3">
         <BackButton />
       </div>
 
-      <div className="w-full max-w-[400px] space-y-8">
+      <div className="w-full max-w-lg space-y-8">
         <div className="text-center lg:text-left">
           <h1 className="text-3xl font-bold text-heading-color mb-2">Welcome Back</h1>
           <p className="text-label-color">
@@ -157,7 +157,7 @@ export function SignInFormUI() {
             disabled={loading}
             className="w-full mt-4 bg-action-color text-white py-2 text-sm cursor-pointer rounded-xl font-semibold flex items-center justify-center gap-2 hover:shadow-sm shadow-action-color transition-shadow duration-300"
           >
-            {loading ? "Signing In..." : "Sign In"} <ArrowRight className="w-4 h-4" />
+            Sign in
           </button>
 
           <div className="relative my-6">
@@ -175,7 +175,7 @@ export function SignInFormUI() {
             type="button"
             onClick={handleGoogleSignIn}
             disabled={loading || redirectLoading}
-            className="w-full flex items-center justify-center gap-3 rounded-xl border border-input-color bg-white py-2 text-sm font-medium text-heading-color hover:bg-gray-50 transition cursor-pointer"
+            className="w-full flex items-center justify-center gap-3 border rounded-xl py-2 text-sm cursor-pointer transition ease-in-out hover:shadow-sm duration-300"
           >
             <Image
               src="/images/google-icon.svg"
@@ -183,7 +183,7 @@ export function SignInFormUI() {
               width={18}
               height={18}
             />
-            Continue with Google
+            Google
           </button>
 
         </form>
