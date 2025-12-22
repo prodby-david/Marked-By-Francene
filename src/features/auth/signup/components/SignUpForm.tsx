@@ -1,143 +1,277 @@
 "use client";
 
-import { Mail, Lock, User, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { Mail, Lock, User } from "lucide-react";
 import BackButton from "@/shared/components/buttons/BackButton";
-import { useSignUpForm } from "../index";
 import Link from "next/link";
-import { error } from "console";
+import Image from "next/image";
+import { signIn } from "next-auth/react";
+import MakeupLoader from "@/shared/components/loader/loader";
+import { useSignUp } from "../index";
+import StatusModal from "@/shared/components/modals/modal";
 
 
 
-export function SignUpFormUI() {
+type FormState = {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
 
-  const { form, errors,  handleChange, handleSubmit } = useSignUpForm();
+type Errors = Record<string, string>;
+
+export default function SignUpForm() {
+  const { signUp, loading } = useSignUp();
+
+  const initialForm: FormState = {
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  };
+
+  const [modal, setModal] = useState({
+    open: false,
+    type: 'success' as 'success' | 'error',
+    title: '',
+    message: '',
+  })
+
+  const [form, setForm] = useState<FormState>(initialForm);
+  const [errors, setErrors] = useState<Errors>({});
+
+  function validate(values: FormState): Errors {
+    if (!values.firstname.trim()) {
+      return { firstname: "First name is required" };
+    }
+
+    if (!values.lastname.trim()) {
+      return { lastname: "Last name is required" };
+    }
+
+    if (!values.email.trim()) {
+      return { email: "Email is required" };
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
+      return { email: "Invalid email address" };
+    }
+
+    if (!values.password) {
+      return { password: "Password is required" };
+    }
+
+    if (values.password.length < 8) {
+      return { password: "Password must be at least 8 characters" };
+    }
+
+    if (values.password !== values.confirmPassword) {
+      return { confirmPassword: "Passwords do not match" };
+    }
+
+    return {};
+  }
+
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+
+    setForm(prev => ({ ...prev, [name]: value }));
+
+    setErrors(prev => {
+      const next = { ...prev };
+      delete next[name];
+      return next;
+    });
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    const validationErrors = validate(form);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    const { confirmPassword, ...payload } = form;
+
+    try {
+      await signUp(payload);
+
+      setModal({
+        open: true,
+        type: "success",
+        title: "Account Created!",
+        message: "Press confirm to continue."
+      });
+
+      setForm(initialForm);
+      setErrors({});
+    } catch {
+      setModal({
+        open: true,
+        type: "error",
+        title: "Signing up failed",
+        message: "Please try again later."
+      });
+    }
+  }
+
+
+  const border = (key: string) =>
+    errors[key] ? "border-red-500" : "border-input-color";
+
+  const hasErrors = Object.keys(errors).length > 0;
 
   return (
-
     <div className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 relative">
-
       <div className="absolute top-4 left-5">
         <BackButton />
       </div>
 
-      <div className="w-full max-w-[400px] space-y-8">
-        
+      <div className="w-full max-w-lg space-y-6">
         <div className="text-center lg:text-left">
-          <h1 className="text-3xl font-bold text-heading-color mb-2">Create Account</h1>
+          <h1 className="text-3xl font-bold text-heading-color mb-2">
+            Create Account
+          </h1>
           <p className="text-label-color">
             Already have an account?{" "}
-            <Link 
-            href={'/signin'} 
-            className="text-action-color font-medium hover:underline">
+            <Link href="/signin" className="text-action-color font-medium hover:underline">
               Sign In
             </Link>
           </p>
         </div>
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
-
-          <div className="flex gap-2">
-
-            <div className="group relative flex-1">
-              
-              <div className="absolute left-3 top-2 text-gray-400">
-                <User className="h-5 w-5" />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <div className="flex flex-col md:flex-row gap-3">
+            <div className="w-full">
+              <label className="text-sm">First Name</label>
+              <div className={`flex items-center border ${border("firstname")} rounded-md px-2`}>
+                <User className="h-4 w-4" />
+                <div className="mx-2 h-5 w-px bg-input-color" />
+                <input
+                  name="firstname"
+                  value={form.firstname}
+                  placeholder='First name'
+                  onChange={handleChange}
+                  className="flex-1 py-1.5 text-sm outline-none w-full"
+                />
               </div>
-
-              <input
-                type="text"
-                name="firstname"
-                value={form.firstname}
-                onChange={handleChange}
-                placeholder="First name"
-                className={`${errors.firstname ? 'border-red-500' : 'border-input-color'} w-full pl-10 pr-4 py-2 text-sm rounded-xl border`}
-              />
-
-              {errors.firstname && (
-                <p className="text-red-500 text-sm mt-1 h-5">{errors.firstname || ' ' }</p>
-              )}
-
             </div>
 
-            <div className="group relative flex-1">
-              <div className="absolute left-3 top-2 text-gray-400">
-                <User className="h-5 w-5" />
+            <div className="w-full">
+              <label className="text-sm">Last Name</label>
+              <div className={`flex items-center border ${border("lastname")} rounded-md px-2`}>
+                <User className="h-4 w-4" />
+                <div className="mx-2 h-5 w-px bg-input-color" />
+                <input
+                  name="lastname"
+                  value={form.lastname}
+                  onChange={handleChange}
+                  placeholder='Last name'
+                  className="flex-1 py-1.5 text-sm outline-none w-full"
+                />
               </div>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-sm">Email</label>
+            <div className={`flex items-center border ${border("email")} rounded-md px-2`}>
+              <Mail className="h-4 w-4" />
+              <div className="mx-2 h-5 w-px bg-input-color" />
               <input
-                type="text"
-                name="lastname"
-                value={form.lastname}
+                name="email"
+                value={form.email}
                 onChange={handleChange}
-                placeholder="Last name"
-                className={`${errors.lastname ? 'border-red-500' : 'border-input-color'} w-full pl-10 pr-4 py-2 text-sm rounded-xl border`}
+                placeholder='Email'
+                className="flex-1 py-1.5 text-sm outline-none w-full"
               />
-
-              {errors.lastname && (
-                <p className="text-red-500 text-sm mt-1 h-5">{errors.lastname || ' '}</p>
-              )}
-
-
             </div>
           </div>
 
-          <div className="group relative">
-            <div className="absolute left-3 top-2 text-gray-400">
-              <Mail className="h-5 w-5" />
+          <div className="flex flex-col md:flex-row gap-3">
+            <div className="w-full">
+              <label className="text-sm">Password</label>
+              <div className={`flex items-center border ${border("password")} rounded-md px-2`}>
+                <Lock className="h-4 w-4" />
+                <div className="mx-2 h-5 w-px bg-input-color" />
+                <input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder='Password'
+                  className="flex-1 py-1.5 text-sm outline-none w-full"
+                />
+              </div>
             </div>
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="Email address"
-              className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-input-color bg-gray-50/50"
-            />
+
+            <div className="w-full">
+              <label className="text-sm">Confirm Password</label>
+              <div className={`flex items-center border ${border("confirmPassword")} rounded-md px-2`}>
+                <Lock className="h-4 w-4" />
+                <div className="mx-2 h-5 w-px bg-input-color" />
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  placeholder='Confirm password'
+                  className="flex-1 py-1.5 text-sm outline-none w-full"
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="group relative">
-            <div className="absolute left-3 top-2 text-gray-400">
-              <Lock className="h-5 w-5" />
+          {hasErrors && (
+            <div className="text-center text-xs text-red-600">
+              {Object.values(errors)[0]}
             </div>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="Password"
-              className={`${errors.password ? 'border-red-500' : 'border-input-color'} w-full pl-10 pr-4 py-2 text-sm rounded-xl border`}
-            />
-             {errors.password && (
-                <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-              )}
-          </div>
+          )}
 
-          <div className="group relative">
-            <div className="absolute left-3 top-2 text-gray-400">
-              <Lock className="h-5 w-5" />
+          <button className="w-full bg-action-color text-white py-2 rounded-xl font-semibold text-sm cursor-pointer mt-2">
+            Sign up
+          </button>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
             </div>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              placeholder="Confirm Password"
-              className={`${errors.confirmPassword ? 'border-red-500' : 'border-input-color'} w-full pl-10 pr-4 py-2 text-sm rounded-xl border`}
-            />
-
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>
-            )}
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-white px-2">Or continue with</span>
+            </div>
           </div>
 
           <button
-            type="submit"
-            className="w-full mt-4 bg-action-color text-white py-2 text-sm cursor-pointer rounded-xl font-semibold flex items-center justify-center gap-2 hover:shadow-sm shadow-action-color transition-shadow duration-300"
+            type="button"
+            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            className="w-full flex items-center justify-center gap-3 border rounded-xl py-2 text-sm cursor-pointer transition ease-in-out hover:shadow-sm duration-300"
           >
-            Create Account <ArrowRight className="w-4 h-4" />
+            <Image src="/images/google-icon.svg" alt="Google" width={18} height={18} />
+            Google
           </button>
-
         </form>
       </div>
+
+      {loading && (
+        <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
+          <MakeupLoader text="Creating your account..." />
+        </div>
+      )}
+
+      <StatusModal
+        open={modal.open}
+        type={modal.type}
+        title={modal.title}
+        message={modal.message}
+        onClose={() => setModal(prev => ({ ...prev, open: false }))}
+      />
+
     </div>
   );
 }

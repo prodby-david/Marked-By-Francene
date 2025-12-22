@@ -1,32 +1,33 @@
-import { NextResponse} from "next/server";  
-import { SignUpType } from "@/features/auth/signup/types/SignUpType";
+import { NextResponse } from "next/server";
+import { signUpSchema } from "@/features/auth/signup";
 import { SignUpServices } from "@/features/auth/signup/services/signup.server";
-
+import { ZodError } from "zod";
 
 export async function POST(req: Request) {
-    try {
+  try {
+    const body = await req.json();
+    const data = signUpSchema.parse(body);
 
-        const data: Omit<SignUpType, "id" | "createdAt" | "confirmPassword"> = await req.json();
+    const user = await SignUpServices.createUser(data);
 
-        if (!data.firstname || !data.lastname || !data.email || !data.password) {
-            return NextResponse.json(
-                { message: "Field must not be empty." },
-                { status: 400 }
-            )
-        }
-
-        const user: Omit<SignUpType, "confirmPassword"> = await SignUpServices.createUser(data);
-
-        return NextResponse.json(
-            { message: "User created successfully", user },
-            { status: 201 }
-        )
-        
-    } catch (err) {
-        return NextResponse.json(
-            { message: "Internal Server Error", error: (err as Error).message },
-            { status: 500 }
-        )    
+    return NextResponse.json(
+      { message: "User created successfully", user },
+      { status: 201 }
+    );
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return NextResponse.json(
+        {
+          message: "Validation failed",
+          errors: err.flatten().fieldErrors
+        },
+        { status: 422 }
+      );
     }
-    
+
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }

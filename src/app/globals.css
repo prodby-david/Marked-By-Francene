@@ -8,11 +8,43 @@
     --color-bg-color: #FFFFFF;
     --color-heading-color: #202124;
     --color-label-color: #5F6368;
-    --color-input-color:#DADCE0;
+    --color-input-color: #DADCE0;
+    --color-error-color:  #E11D48;
 }
+
 body{
     font-family: Poppins, sans-serif;
 }
+
+@keyframes brush-move {
+  0% {
+    transform: translate(0, -50%);
+  }
+  50% {
+    transform: translate(100px, -50%);
+  }
+  100% {
+    transform: translate(0, -50%);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-brush {
+  animation: brush-move 1.6s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 1.6s linear infinite;
+}
+
 
 @theme inline {
     --radius-sm: calc(var(--radius) - 4px);

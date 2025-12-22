@@ -1,7 +1,8 @@
-import NextAuth, { AuthOptions } from "next-auth";
+import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/shared/lib/prisma";
-import bcrypt from "bcryptjs"; 
+import bcrypt from "bcryptjs";
+import { googleProvider } from "@/lib/googleProvider";
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -12,16 +13,19 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error('Email and password are required.')
+        }
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
 
-        if (!user) return null;
+        const isValidUser = user ? await bcrypt.compare(credentials.password, user.password) : false;
 
-        const isValid = await bcrypt.compare(credentials.password, user.password);
-        if (!isValid) return null;
+        if (!user || !isValidUser) {
+          throw new Error("Invalid email or password");
+        }
 
         return {
           id: user.id,
@@ -30,17 +34,16 @@ export const authOptions: AuthOptions = {
         };
       },
     }),
+    googleProvider,
   ],
   session: {
-    strategy: "jwt", 
+    strategy: "jwt",
   },
   jwt: {
-    secret: process.env.NEXT_AUTH_SECRET, 
+    secret: process.env.NEXT_AUTH_SECRET,
   },
   pages: {
-    signIn: "/signin", 
+    signIn: "/signin",
   },
   secret: process.env.NEXT_AUTH_SECRET,
 };
-
-export default NextAuth(authOptions);
