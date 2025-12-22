@@ -11,7 +11,6 @@ export function AuthImageSection() {
       src="/images/makeup.jpg" 
       alt="Sign Up Image" 
       fill
-      objectFit="cover"
       />
 
       <div className="relative z-20 text-center px-12">
