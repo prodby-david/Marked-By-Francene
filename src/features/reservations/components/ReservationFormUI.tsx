@@ -239,7 +239,7 @@ export function ReservationFormUI({ form, handleChange, handleSubmit, showCalend
         <textarea 
         name="notes" 
         id="Notes" 
-        value={form.notes}
+        value={form.notes ?? ''}
         onChange={handleChange}
         maxLength={150}
         placeholder="Add notes.." 
