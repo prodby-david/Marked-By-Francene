@@ -5,7 +5,7 @@ import { ServiceProps } from "@/shared/types/ServiceProps";
 
 const services: ServiceProps[] = [
   {
-    title: "Minimal Glow",
+    title: "Soft Glam",
     price: "₱1,500",
     description: "Perfect for photoshoots or a fresh, everyday look. Enhances your natural features.",
     features: [
@@ -127,10 +127,10 @@ export default function ServicesSectionUI() {
 
         <div className="mt-16 text-center">
           <p className="text-label-color mb-4">
-            Need a custom package for a large group or special event?
+            Have a custom look in your mind? Let us know!
           </p>
           <Link 
-            href="/contact" 
+            href="/reserve" 
             className="text-action-color font-semibold hover:text-purple-600 transition-colors inline-flex items-center gap-1 group"
           >
             Contact us for a quote 
