@@ -38,7 +38,7 @@ export default function HeroSectionUI(){
 
             <div className="flex flex-col sm:flex-row gap-2 items-center justify-center md:justify-start">
               <Link 
-                href="/reserve" 
+                href="/signin" 
                 className="flex items-center justify-center gap-2 px-8 py-2 md:py-3.5 text-sm font-medium w-40 text-white transition-all bg-action-color rounded-lg hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-100 active:scale-95"
               >
                 Book Now
@@ -46,10 +46,10 @@ export default function HeroSectionUI(){
               </Link>
               
               <Link 
-                href="#portfolio"
+                href="/service-offered"
                 className=" items-center justify-center gap-2 px-8 py-2 md:py-3.5 text-sm font-medium text-heading-color transition-all bg-white border border-input-color rounded-lg hover:bg-gray-50 hover:border-gray-300 active:scale-95"
               >
-                View Portfolio
+                Pick Your Look
               </Link>
             </div>
 
