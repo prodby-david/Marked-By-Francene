@@ -1,8 +1,7 @@
 import { Star, Quote } from "lucide-react";
 import { Navbar } from "@/shared/components/navigation/Navigation";
-import { Nav } from "react-day-picker";
 
-// 1. Sample Data (Modify this later)
+
 const reviews = [
   {
     id: 1,
@@ -35,10 +34,8 @@ export default function ReviewsSectionUI() {
     
     <section id="reviews" className="py-24 bg-white relative overflow-hidden">
       
-      {/* Container */}
       <div className="container mx-auto px-6 max-w-7xl relative z-10">
         
-        {/* 2. Minimal Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <div className="flex items-center justify-center gap-2 mb-4">
             <span className="h-px w-8 bg-action-color/30"></span>
@@ -50,14 +47,13 @@ export default function ReviewsSectionUI() {
           </h2>
         </div>
 
-        {/* 3. Responsive Grid (1 col mobile, 3 col desktop) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {reviews.map((review) => (
             <div 
               key={review.id} 
               className="bg-gray-50/50 p-8 rounded-2xl border border-gray-100 hover:border-blue-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
             >
-              {/* Rating Stars */}
+
               <div className="flex gap-1 mb-6">
                 {[...Array(5)].map((_, i) => (
                   <Star 
@@ -67,7 +63,6 @@ export default function ReviewsSectionUI() {
                 ))}
               </div>
 
-              {/* Review Text */}
               <div className="relative mb-8">
                 <Quote className="absolute -top-2 -left-2 w-8 h-8 text-blue-100/50 -z-10 transform -scale-x-100" />
                 <p className="text-label-color text-sm leading-relaxed font-light relative z-10">
@@ -75,9 +70,8 @@ export default function ReviewsSectionUI() {
                 </p>
               </div>
 
-              {/* User Info */}
               <div className="flex items-center gap-4 pt-6 border-t border-gray-100">
-                {/* Avatar Placeholder */}
+
                 <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-100 to-purple-100 flex items-center justify-center text-action-color font-bold text-sm shadow-sm group-hover:scale-110 transition-transform">
                   {review.name.charAt(0)}
                 </div>
