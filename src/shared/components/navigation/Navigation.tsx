@@ -17,8 +17,8 @@ export function Navbar() {
     <nav
       className='fixed top-0 w-full z-50 transition-all duration-300 bg-bg-color border-b border-input-color shadow-sm'
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14">
+      <div className="max-w-7xl">
+        <div className="flex items-center justify-around h-14">
           
           <Link href="/" className="flex items-center gap-2 group">
             <span className="text-sm font-bold text-heading-color tracking-tight">
@@ -37,12 +37,7 @@ export function Navbar() {
               </Link>
             ))}
             
-            <Link
-              href="/signin"
-              className="text-white px-5 py-2.5 rounded-full text-sm font-medium bg-action-color hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300 transform hover:-translate-y-0.5"
-            >
-              Book Now
-            </Link>
+            
           </div>
 
           <div className="md:hidden">
@@ -70,15 +65,6 @@ export function Navbar() {
                 {link.name}
               </Link>
             ))}
-            <div className="pt-4 px-4">
-              <Link
-                href="/reserve"
-                onClick={() => setIsOpen(false)}
-                className="block w-full text-center bg-action-color text-white px-5 py-3 rounded-lg text-base font-medium hover:bg-blue-600 transition-colors"
-              >
-                Book a Session
-              </Link>
-            </div>
           </div>
         </div>
       )}
