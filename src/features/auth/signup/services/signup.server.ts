@@ -1,5 +1,5 @@
 import { SignUpRepository } from "../repo/signup.repo";
-import bcrypt from 'bcryptjs'
+import { hashPassword } from "@/shared/lib/hashpassword";
 
 
 
@@ -11,9 +11,8 @@ export const SignUpServices = {
         email: string;
         password: string;
     }){
-        const hashedPassword = await bcrypt.hash(data.password, 10);
-        data.password = hashedPassword;
-        return await SignUpRepository.create(data);
+        const hashedPassword = await hashPassword(data.password);
+        return await SignUpRepository.create({...data, password: hashedPassword});
     }
 
 }
