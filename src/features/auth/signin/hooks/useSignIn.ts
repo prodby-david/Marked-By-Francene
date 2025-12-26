@@ -5,6 +5,7 @@ import { useState } from "react";
 import { publicApi } from "@/shared/lib/axios";
 
 export function useSignIn() {
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -14,6 +15,7 @@ export function useSignIn() {
     setError(null);
 
     try{
+
       const res = await publicApi.post('/api/auth', {
         email,
         password,
@@ -26,10 +28,6 @@ export function useSignIn() {
           redirect: false
         })
       }
-
-
-      
-
        return true;
     }
 
@@ -44,7 +42,7 @@ export function useSignIn() {
       setLoading(false);
     }
 
-    }
+  }
 
   return { login, loading, error };
 }
