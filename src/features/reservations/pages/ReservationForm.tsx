@@ -22,9 +22,6 @@ export default function ReservationForm() {
         form={form}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
-        showCalendar={showCalendar}
-        setShowCalendar={setShowCalendar}
-        calendarRef={calendarRef}
       />
 
       {modal.open && (
