@@ -14,24 +14,23 @@ datasource db {
 }
 
 model User {
-  id String @id @default(cuid())
-  email String @unique
-  firstname String
-  lastname String
-  password String 
-  createdAt DateTime @default(now())
+  id           String        @id @default(cuid())
+  email        String        @unique
+  firstname    String
+  lastname     String
+  password     String
+  createdAt    DateTime      @default(now())
+  reservations Reservation[]
 }
 
 model Reservation {
-  id String @id @default(cuid())
-  lastname String
-  firstname String
-  location String
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  location      String
   contactNumber String
-  email String
-  theme String
-  date String
-  time String
-  notes String?
-  createdAt DateTime @default(now())
+  theme         String
+  dateTime      DateTime
+  notes         String?
+  createdAt     DateTime @default(now())
 }

@@ -1,16 +1,15 @@
 import { api } from "@/shared/lib/axios";
-import { ReservationType } from "../types/ReservationType";
-
+import { ReservationFormInput } from "../types/ReservationForm";
 
 export const ReservationClientServices = {
 
-    async createReservation(data: Omit<ReservationType, "id" | "createdAt">): Promise<ReservationType> {
-        const response = await api.post<ReservationType>("/reservation", data);
+    async createReservation( data: ReservationFormInput ) {
+        const response = await api.post<ReservationFormInput>("/api/reservation", data);
         return response.data;
     },
 
-    async getAllReservations(): Promise<ReservationType[]> {
-        const response = await api.get("/reservation");
+    async getAllReservations(): Promise<ReservationFormInput[]> {
+        const response = await api.get("/api/reservation");
         return response.data.reservations;
     }
     

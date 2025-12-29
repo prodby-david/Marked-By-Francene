@@ -1,5 +1,5 @@
 import { getUserByEmail } from "../repo/signin.repo";
-import { hashPassword } from "@/shared/lib/hashpassword";
+import { hashPassword, comparePassword } from "@/shared/lib/hashpassword";
 
 
 export async function validateUser(email: string, password: string){
@@ -8,9 +8,8 @@ export async function validateUser(email: string, password: string){
 
     if(!user) return null;
 
-    const isValid = await hashPassword(password);
-
-    if(!isValid) return null;
+    const isValid = await comparePassword(password, user.password);
+    if (!isValid) return null;
 
     return {
         id: user.id,

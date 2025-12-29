@@ -16,7 +16,7 @@ export function useSignIn() {
 
     try{
 
-      const res = await publicApi.post('/api/auth', {
+      const res = await publicApi.post('/api/signin', {
         email,
         password,
       })

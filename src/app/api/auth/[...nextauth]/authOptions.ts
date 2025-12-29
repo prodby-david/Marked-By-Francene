@@ -23,6 +23,22 @@ export const authOptions: AuthOptions = {
     googleProvider
   ],
   session: { strategy: "jwt" },
+  callbacks: {
+    async jwt({ token, user }) {
+      // runs on sign in
+      if (user) {
+        token.id = user.id;   // 👈 attach DB user id
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+      }
+      return session;
+    }
+  },
   jwt: { secret: process.env.NEXT_AUTH_SECRET },
   pages: { signIn: "/signin" },
   secret: process.env.NEXT_AUTH_SECRET

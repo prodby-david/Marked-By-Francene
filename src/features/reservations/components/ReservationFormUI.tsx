@@ -1,11 +1,11 @@
 "use client";
 
 
-import { ReservationType } from "../types/ReservationType";
+import { ReservationFormInput } from "../types/ReservationForm";
 import { Mail, User, Palette, Calendar as CalendarIcon, Clock, PhoneCallIcon, MapPin } from "lucide-react";
 import { Calendar } from "@/shared/components/ui/calendar";
 
-type FormData = Omit<ReservationType, "id" | "createdAt">;
+type FormData = Omit<ReservationFormInput, "id" | "createdAt">;
 
 type ReservationFormUIProps = {
   form: FormData;
@@ -25,52 +25,6 @@ export function ReservationFormUI({ form, handleChange, handleSubmit, showCalend
       className="flex flex-col gap-3 w-full max-w-lg shadow-sm shadow-gray-500 p-5 rounded-md"
     >
 
-      <div className="flex flex-col md:flex-row items-center gap-3">
-        {/* First Name and Last Name input fields */}
-        <div className="w-full">
-          <label className="text-sm text-heading-color" htmlFor="FirstName">
-            First Name
-          </label>
-
-          <div className="flex items-center border border-input-color rounded px-2">
-            <User className="h-4 w-4 text-label-color" />
-            <div className="mx-2 h-5 w-px bg-input-color" />
-            <input
-              type="text"
-              name="firstname"
-              id="FirstName"
-              placeholder="First name"
-              value={form.firstname}
-              onChange={handleChange}
-              className="flex-1 py-1.5 outline-none text-sm text-heading-color"
-            />
-          </div>
-        </div>
-
-        <div className="w-full">
-          <label 
-          className="text-sm text-heading-color" 
-          htmlFor="LastName">
-            Last Name
-          </label>
-
-          <div className="flex items-center border border-input-color rounded px-2">
-              <User className="h-4 w-4 text-label-color" />
-              <div className="mx-2 h-5 w-px bg-input-color" />
-              <input
-                type="text"
-                name="lastname"
-                id="LastName"
-                placeholder="Last name"
-                value={form.lastname}
-                onChange={handleChange}
-                className="flex-1 py-1.5 outline-none text-sm text-heading-color"
-              />
-            </div>
-        </div>
-      </div>
-
-      {/* Location field */}
       <div>
         <label htmlFor="Location" className="text-sm text-heading-color">Location</label>
         <div className="flex items-center border border-input-color rounded px-2">
@@ -79,6 +33,8 @@ export function ReservationFormUI({ form, handleChange, handleSubmit, showCalend
           <input type="text"
           name="location"
           id="Location"
+          value={form.location}
+          onChange={handleChange}
           className="flex-1 py-1.5 outline-none text-sm text-heading-color" />
         </div>
       </div>
@@ -112,28 +68,6 @@ export function ReservationFormUI({ form, handleChange, handleSubmit, showCalend
                 className="flex-1 py-1.5 outline-none text-sm text-heading-color"
               />
             </div>
-          </div>
-        </div>
-
-        <div className="w-full">
-          <label 
-          className="text-sm text-heading-color"  
-          htmlFor="Email">
-            Email
-          </label>
-
-          <div className="flex items-center border border-input-color rounded-md px-2">
-            <Mail className="h-4 w-4 text-label-color" />
-            <div className="mx-2 h-5 w-px bg-input-color" />
-            <input
-              type="email"
-              name="email"
-              id="Email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="Email Address"
-              className="flex-1 py-1.5 outline-none text-sm text-heading-color"
-            />
           </div>
         </div>
       </div>
@@ -199,7 +133,7 @@ export function ReservationFormUI({ form, handleChange, handleSubmit, showCalend
                   handleChange({
                     target: {
                       name: "date",
-                      value: date?.toISOString() ?? "",
+                      value: date?.toISOString().split("T")[0] || "",
                     },
                   });
                   setShowCalendar(false); 

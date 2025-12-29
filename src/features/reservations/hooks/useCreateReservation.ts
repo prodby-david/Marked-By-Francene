@@ -1,23 +1,28 @@
 import { useState } from "react";
-import { ReservationType } from "../types/ReservationType";
+import { ReservationFormInput} from "../types/ReservationForm";
 import { ReservationClientServices } from "../services/reservation.client";
 
 
-export function useCreateReservation(){
-    const [ data, setData ] = useState<any>(null);
+export function useCreateReservation() {
+  const [data, setData] = useState<any>(null);
 
-    async function createReservation(data: Omit<ReservationType, "id" | "createdAt">){
+  async function createReservation(input: ReservationFormInput) {
 
-        try {
-            const res = await ReservationClientServices.createReservation(data);
-            setData(res);
-            return res;
-        } catch (err) {
-            throw err;
-        }
-        
+    const { location, contactNumber, theme, date, time } = input;
+    
+    if (!location || !contactNumber || !theme || !date || !time) {
+      throw new Error("All fields are required");
     }
 
-    return { createReservation, data };
+    try {
+      const res = await ReservationClientServices.createReservation(input);
+      setData(res);
+      return res;
+    } catch (err) {
+      console.error("Failed to create reservation:", err);
+      throw err;
+    }
+  }
 
+  return { createReservation, data };
 }

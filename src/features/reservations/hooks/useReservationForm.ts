@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useCreateReservation, ReservationType } from "@/features/reservations/index";
+import { useCreateReservation, ReservationFormInput} from "@/features/reservations/index";
 
 
 export function useReservationForm() {
@@ -26,34 +26,48 @@ export function useReservationForm() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [showCalendar]);
 
-    const [form, setForm] = useState<Omit<ReservationType, 'id' | 'createdAt'>>({
-        lastname: "",
-        firstname: "",
+    const [form, setForm] = useState<Omit<ReservationFormInput, 'id' | 'createdAt'>>({
         location: "",
         contactNumber: "",
-        email: "",
         theme: "",
         date: "",
-        time: ""
-        
+        time: "",
+        notes: "",
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value,
-        }); 
-    }
+    const handleChange = (e: any) => {
+        const name = e.target?.name;
+        const value = e.target?.value;
+
+        if (!name) return;
+
+        setForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        
-        try {
-            await createReservation(form);  
-        } catch (err : any) {
-            setError(err.message || "Something went wrong");
-        }
+    e.preventDefault();
+    setError(null); 
+
+    // Validate frontend
+    const { location, contactNumber, theme, date, time } = form;
+    if (!location || !contactNumber || !theme || !date || !time) {
+        setError("All fields are required");
+        return;
     }
+
+    try {
+        const res = await createReservation(form);
+        console.log("Reservation created:", res);
+        alert("Reservation created successfully!");
+    } catch (err: any) {
+        setError(err.message || "Something went wrong");
+    }
+}
+
 
     return {
         form,

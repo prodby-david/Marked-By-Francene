@@ -1,22 +1,48 @@
 import { prisma } from "@/shared/lib/prisma";
-import { ReservationType } from "../index";
 
+type CreateReservationInput = {
+  userId: string;
+  location: string;
+  contactNumber: string;
+  theme: string;
+  dateTime: Date;
+  notes: string | null;
+};
 
 export const ReservationRepository = {
+  async createUserReservation(data: CreateReservationInput) {
+    return prisma.reservation.create({
+      data: {
+        location: data.location,
+        contactNumber: data.contactNumber,
+        theme: data.theme,
+        dateTime: data.dateTime,
+        notes: data.notes ?? null,
+        user: { connect: { id: data.userId } } 
+      },
+      include: {
+        user: {
+          select: { id: true, firstname: true, lastname: true, email: true }
+        }
+      }
+    });
+  },
 
-    async createUserReservation(data: Omit<ReservationType, "id" | "createdAt">){
-        return await prisma.reservation.create({data});
-    },
+  async getUserReservation(id: string) {
+    return prisma.reservation.findUnique({
+      where: { id },
+      include: {
+        user: { select: { id: true, firstname: true, lastname: true, email: true } }
+      }
+    });
+  },
 
-    async getUserReservation(id: string){
-        return await prisma.reservation.findUnique({
-            where: { id }
-        })
-    },
-
-    async getAllReservation(): Promise<ReservationType[]>{
-        const reservation = await prisma.reservation.findMany();
-        return reservation;
-    }
-    
-}
+  async getAllReservation() {
+    return prisma.reservation.findMany({
+      include: {
+        user: { select: { id: true, firstname: true, lastname: true, email: true } }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+  }
+};

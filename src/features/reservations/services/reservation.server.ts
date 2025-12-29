@@ -1,22 +1,24 @@
-import { prisma } from "@/shared/lib/prisma";
-import { ReservationType } from "../index";
+import { ReservationFormInput } from "../types/ReservationForm";
 import { ReservationRepository } from "../repos/reservation";
 
-
-
 export const ReservationServerServices = {
+  async createReservation(userId: string, input: ReservationFormInput) {
+    const dateTime = new Date(`${input.date}T${input.time}`);
+    return ReservationRepository.createUserReservation({
+      userId,
+      location: input.location,
+      contactNumber: input.contactNumber,
+      theme: input.theme,
+      dateTime,
+      notes: input.notes ?? null
+    });
+  },
 
-    async createReservation(data: Omit<ReservationType, "id" | "createdAt">): Promise<ReservationType> {
-        return await ReservationRepository.createUserReservation(data)
-    },
+  async getAllReservations() {
+    return ReservationRepository.getAllReservation();
+  },
 
-    async getAllReservations(): Promise<ReservationType[]> {
-        return await ReservationRepository.getAllReservation();
-    },
-
-    async getReservationById(id: string): Promise<ReservationType | null> {
-        return await ReservationRepository.getUserReservation(id);
-    
-    }
-
-}
+  async getReservationById(id: string) {
+    return ReservationRepository.getUserReservation(id);
+  }
+};
