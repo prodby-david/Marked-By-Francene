@@ -17,14 +17,8 @@ const session = await getServerSession(authOptions);
     );
   }
 
-  
-
   try {
     const data: ReservationFormInput = await req.json();
-
-    console.log("session.user.id:", session.user?.id);
-    console.log("incoming data:", data);
-
 
     if (!data.location || !data.contactNumber || !data.theme || !data.date || !data.time) {
       return NextResponse.json(

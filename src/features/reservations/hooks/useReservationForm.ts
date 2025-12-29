@@ -1,80 +1,94 @@
-import { useState, useRef, useEffect } from "react";
-import { useCreateReservation, ReservationFormInput} from "@/features/reservations/index";
+"use client";
 
+import { useState, useRef, useEffect } from "react";
+import { useCreateReservation, ReservationFormInput } from "@/features/reservations/index";
 
 export function useReservationForm() {
+  const { createReservation } = useCreateReservation();
 
-    const { createReservation } = useCreateReservation();
-    const [error, setError] = useState<string | null>(null);
+  const [modal, setModal] = useState({
+    open: false,
+    type: "success" as "success" | "error",
+    title: "",
+    message: "",
+  });
 
-    const [showCalendar, setShowCalendar] = useState(false);
-    const calendarRef = useRef<HTMLDivElement>(null);
+  const closeModal = () => setModal(prev => ({ ...prev, open: false }));
 
-    useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-        if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
-            setShowCalendar(false);
-        }
-        }
+  const [showCalendar, setShowCalendar] = useState(false);
+  const calendarRef = useRef<HTMLDivElement>(null);
 
-        if (showCalendar) {
-        document.addEventListener("mousedown", handleClickOutside);
-        } else {
-        document.removeEventListener("mousedown", handleClickOutside);
-        }
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+        setShowCalendar(false);
+      }
+    }
 
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [showCalendar]);
+    if (showCalendar) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
 
-    const [form, setForm] = useState<Omit<ReservationFormInput, 'id' | 'createdAt'>>({
-        location: "",
-        contactNumber: "",
-        theme: "",
-        date: "",
-        time: "",
-        notes: "",
-    });
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showCalendar]);
 
-    const handleChange = (e: any) => {
-        const name = e.target?.name;
-        const value = e.target?.value;
+  const [form, setForm] = useState<ReservationFormInput>({
+    location: "",
+    contactNumber: "",
+    theme: "",
+    date: "",
+    time: "",
+    notes: "",
+  });
 
-        if (!name) return;
+  const handleChange = (e: any) => {
+    const name = e.target?.name;
+    const value = e.target?.value;
+    if (!name) return;
 
-        setForm((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
+    setForm(prev => ({ ...prev, [name]: value }));
+  };
 
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null); 
-
-    // Validate frontend
     const { location, contactNumber, theme, date, time } = form;
+
     if (!location || !contactNumber || !theme || !date || !time) {
-        setError("All fields are required");
-        return;
+      setModal({
+        open: true,
+        type: "error",
+        title: "Validation Error",
+        message: "All fields are required",
+      });
+      return;
     }
 
     try {
-        const res = await createReservation(form);
-        console.log("Reservation created:", res);
-        alert("Reservation created successfully!");
+      await createReservation(form);
+      setModal({
+        open: true,
+        type: "success",
+        title: "Success",
+        message: "Reservation created successfully",
+      });
     } catch (err: any) {
-        setError(err.message || "Something went wrong");
+      setModal({
+        open: true,
+        type: "error",
+        title: "Error",
+        message: err.message || "Something went wrong",
+      });
     }
-}
+  };
 
-
-    return {
-        form,
-        handleChange,
-        handleSubmit,
-        showCalendar,
-        setShowCalendar,
-        calendarRef,
-    }
+  return {
+    form,
+    handleChange,
+    handleSubmit,
+    showCalendar,
+    setShowCalendar,
+    calendarRef,
+    modal,
+    closeModal,
+  };
 }

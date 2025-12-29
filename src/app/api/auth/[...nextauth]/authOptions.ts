@@ -25,9 +25,9 @@ export const authOptions: AuthOptions = {
   session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token, user }) {
-      // runs on sign in
+
       if (user) {
-        token.id = user.id;   // 👈 attach DB user id
+        token.id = user.id;  
       }
       return token;
     },

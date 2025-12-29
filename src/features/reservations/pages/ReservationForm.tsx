@@ -1,21 +1,41 @@
-'use client'
+"use client";
 
-import { useReservationForm } from "../hooks/useReservationForm"
-import { ReservationFormUI } from "../components/ReservationFormUI"
+import ReservationFormUI from "../components/ReservationFormUI";
+import { useReservationForm } from "../hooks/useReservationForm";
+import StatusModal from "@/shared/components/modals/modal";
 
 export default function ReservationForm() {
+  const {
+    form,
+    handleChange,
+    handleSubmit,
+    showCalendar,
+    setShowCalendar,
+    calendarRef,
+    modal,
+    closeModal,
+  } = useReservationForm();
 
-    const { form, handleChange, handleSubmit, showCalendar, setShowCalendar, calendarRef } = useReservationForm();
-
-    return (
-        <ReservationFormUI 
-        form={form} 
-        handleChange={handleChange} 
-        handleSubmit={handleSubmit} 
+  return (
+    <>
+      <ReservationFormUI
+        form={form}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
         showCalendar={showCalendar}
         setShowCalendar={setShowCalendar}
         calendarRef={calendarRef}
-        />
-    )
+      />
 
+      {modal.open && (
+        <StatusModal
+          open={modal.open}
+          type={modal.type}
+          title={modal.title}
+          message={modal.message}
+          onClose={closeModal}
+        />
+      )}
+    </>
+  );
 }
