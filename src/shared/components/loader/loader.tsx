@@ -1,27 +1,30 @@
 "use client";
 
-import { Brush } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 interface MakeupLoaderProps {
   text?: string;
+  fullScreen?: boolean;
 }
 
-export default function MakeupLoader({ text = "Preparing your glam..." }: MakeupLoaderProps) {
+export default function MakeupLoader({ 
+  text = "Preparing your glam...", 
+  fullScreen = false 
+}: MakeupLoaderProps) {
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
+    <div className={`flex flex-col items-center justify-center gap-4 ${fullScreen ? "min-h-screen w-full bg-gray-50" : "w-full py-12"}`}>
 
-      <div className="relative w-32 h-10 overflow-hidden">
+      <div className="relative flex items-center justify-center">
         
-        <div className="absolute inset-0 bg-linear-to-r from-transparent via-gray-200/50 to-transparent animate-shimmer" />
-
-        <Brush
-          className="absolute left-0 top-7 -translate-y-1/2 text-action-color animate-brush"
-          size={28}
-        />
+        <div className="w-12 h-12 rounded-full border-[3px] border-gray-100 border-t-action-color animate-spin"></div>
+        
+        <div className="absolute inset-0 flex items-center justify-center">
+           <Sparkles className="w-4 h-4 text-action-color fill-action-color animate-pulse" />
+        </div>
       </div>
 
-      <p className="text-sm text-heading-color font-medium">
+      <p className="text-xs font-medium text-label-color animate-pulse uppercase tracking-wide">
         {text}
       </p>
 
