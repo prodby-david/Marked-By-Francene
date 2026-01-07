@@ -10,19 +10,25 @@ type CreateReservationInput = {
 };
 
 export const ReservationRepository = {
+  
   async createUserReservation(data: CreateReservationInput) {
+
     return prisma.reservation.create({
       data: {
+        userId: data.userId,
         location: data.location,
         contactNumber: data.contactNumber,
         theme: data.theme,
         dateTime: data.dateTime,
-        notes: data.notes ?? null,
-        user: { connect: { id: data.userId } } 
+        notes: data.notes,
       },
       include: {
         user: {
-          select: { id: true, firstname: true, lastname: true, email: true }
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
         }
       }
     });
@@ -32,7 +38,13 @@ export const ReservationRepository = {
     return prisma.reservation.findUnique({
       where: { id },
       include: {
-        user: { select: { id: true, firstname: true, lastname: true, email: true } }
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
       }
     });
   },
@@ -40,9 +52,23 @@ export const ReservationRepository = {
   async getAllReservation() {
     return prisma.reservation.findMany({
       include: {
-        user: { select: { id: true, firstname: true, lastname: true, email: true } }
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+  },
+
+  async deleteReservation(id: string) {
+    return prisma.reservation.delete({
+      where: { id }
     });
   }
 };
