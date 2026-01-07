@@ -2,8 +2,15 @@ import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { googleProvider } from "@/lib/googleProvider";
 import { validateUser } from "@/features/auth/signin/services/signin.server";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { prisma } from "@/shared/lib/prisma";
+
+
 
 export const authOptions: AuthOptions = {
+  
+  adapter: PrismaAdapter(prisma),
+
   providers: [
 
     CredentialsProvider({
@@ -14,11 +21,28 @@ export const authOptions: AuthOptions = {
       },
 
       async authorize(credentials) {
-        if (!credentials?.email || !credentials.password) return null;
+        if (!credentials?.email || !credentials.password) {
+          return null;
+        }
 
-        return validateUser(credentials.email, credentials.password);
+        const user = await validateUser(
+          credentials.email,
+          credentials.password
+        );
 
+        if (!user) {
+          return null;
+        }
+
+        if (!user.password) return null;
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name ?? null,
+        };
       }
+
     }),
     googleProvider
   ],
