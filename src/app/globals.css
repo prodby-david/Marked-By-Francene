@@ -16,6 +16,10 @@ body{
     font-family: Poppins, sans-serif;
 }
 
+button{
+  cursor: pointer;
+}
+
 @keyframes brush-move {
   0% {
     transform: translate(0, -50%);
