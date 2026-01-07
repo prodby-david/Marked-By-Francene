@@ -2,7 +2,6 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import { Bell, Search, Menu, Command, LogOut } from "lucide-react";
 import SidebarNavigation from "@/shared/components/navigation/DashboardNavigation";
-import CustomerSupportWidget from "@/shared/components/widgets/CustomerAssistance";
 import NotificationDropdown from "@/shared/components/notification/Notification";
 import UserMenuDropdown from "@/shared/components/widgets/UserMenuDropdown";
 
@@ -75,8 +74,6 @@ export default async function DashboardLayout({
             
           </div>
         </header>
-
-        <CustomerSupportWidget />
 
         <main className="flex-1 overflow-y-auto p-6 md:p-8">
           <div className="max-w-5xl mx-auto">
