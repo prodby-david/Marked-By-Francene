@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Minus, HelpCircle } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Navbar } from "@/shared/components/navigation/Navigation";
 
 interface FaqItem {
   question: string;
   answer: string;
 }
-
 
 const faqs: FaqItem[] = [
   {
@@ -30,7 +29,6 @@ const faqs: FaqItem[] = [
 ];
 
 export default function FaqSectionUI() {
-
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFaq = (index: number) => {
@@ -39,19 +37,18 @@ export default function FaqSectionUI() {
 
   return (
     <>
+
     <Navbar />
-    <section id="faq" className="py-24 bg-gray-50 relative">
+
+    <section id="faq" className="py-24 bg-gray-50 border-t border-gray-200">
       
-      <div className="container mx-auto px-6 max-w-3xl relative z-10">
+      <div className="container mx-auto px-6 max-w-3xl">
         
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center p-3 bg-white rounded-2xl shadow-sm mb-6">
-            <HelpCircle className="w-6 h-6 text-action-color" />
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-heading-color mb-4">
+        <div className="text-center mb-16 space-y-3">
+          <h2 className="text-3xl font-bold text-heading-color tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="text-label-color text-lg font-light">
+          <p className="text-label-color text-lg">
             Everything you need to know about booking your session.
           </p>
         </div>
@@ -61,19 +58,24 @@ export default function FaqSectionUI() {
             <div 
               key={index}
               className={`
-                bg-white rounded-2xl border transition-all duration-300 overflow-hidden
-                ${openIndex === index ? "border-action-color/30 shadow-md" : "border-gray-200 hover:border-gray-300"}
+                bg-white rounded-lg border transition-all duration-200 overflow-hidden
+                ${openIndex === index 
+                  ? "border-action-color ring-1 ring-action-color shadow-sm" 
+                  : "border-gray-200 hover:border-gray-300"
+                }
               `}
             >
               <button
                 onClick={() => toggleFaq(index)}
-                className="w-full flex items-center justify-between p-6 text-left focus:outline-none"
+                className="w-full flex items-center justify-between p-5 text-left focus:outline-none"
               >
-                <span className={`font-medium text-lg ${openIndex === index ? "text-action-color" : "text-heading-color"}`}>
+                <span className={`font-medium text-[15px] ${openIndex === index ? "text-action-color" : "text-heading-color"}`}>
                   {faq.question}
                 </span>
-                <div className={`p-1 rounded-full transition-colors ${openIndex === index ? "bg-blue-50 text-action-color" : "text-gray-400"}`}>
-                  {openIndex === index ? <Minus className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+                
+                {/* Rotating Chevron Icon */}
+                <div className={`transition-transform duration-200 ${openIndex === index ? "rotate-180 text-action-color" : "text-gray-400"}`}>
+                  <ChevronDown className="w-5 h-5" />
                 </div>
               </button>
 
@@ -83,7 +85,7 @@ export default function FaqSectionUI() {
                   ${openIndex === index ? "max-h-48 opacity-100" : "max-h-0 opacity-0"}
                 `}
               >
-                <p className="px-6 pb-6 text-label-color text-base leading-relaxed border-t border-gray-50 pt-4">
+                <p className="px-5 pb-5 text-label-color text-sm leading-relaxed">
                   {faq.answer}
                 </p>
               </div>
@@ -91,11 +93,12 @@ export default function FaqSectionUI() {
           ))}
         </div>
 
+        {/* Footer */}
         <div className="mt-12 text-center">
           <p className="text-label-color text-sm">
             Still have questions?{" "}
-            <a href="mailto:hello@marked.com" className="text-action-color font-semibold hover:underline">
-              Email us directly
+            <a href="mailto:hello@marked.com" className="text-action-color font-medium hover:underline">
+              Contact Support
             </a>
           </p>
         </div>
