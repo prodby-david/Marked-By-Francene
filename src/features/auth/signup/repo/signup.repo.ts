@@ -3,8 +3,7 @@ import { prisma } from "@/shared/lib/prisma";
 export const SignUpRepository = {
 
     async create(data: {
-        firstname: string;
-        lastname: string;
+        name: string;
         email: string;
         password: string;
     }) {
