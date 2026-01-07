@@ -11,8 +11,14 @@ export const SignUpServices = {
         email: string;
         password: string;
     }){
-        const hashedPassword = await hashPassword(data.password);
-        return await SignUpRepository.create({...data, password: hashedPassword});
+     const hashedPassword = await hashPassword(data.password);
+      const name = `${data.firstname} ${data.lastname}`.trim();
+
+      return await SignUpRepository.create({
+        email: data.email,
+        password: hashedPassword,
+        name
+      });
     }
 
 }
