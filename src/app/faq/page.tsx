@@ -73,7 +73,6 @@ export default function FaqSectionUI() {
                   {faq.question}
                 </span>
                 
-                {/* Rotating Chevron Icon */}
                 <div className={`transition-transform duration-200 ${openIndex === index ? "rotate-180 text-action-color" : "text-gray-400"}`}>
                   <ChevronDown className="w-5 h-5" />
                 </div>
