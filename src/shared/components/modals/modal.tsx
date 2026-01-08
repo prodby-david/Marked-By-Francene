@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle, XCircle, X } from "lucide-react";
+import { CheckCircle, XCircle } from "lucide-react";
 
 type StatusType = "success" | "error";
 
@@ -38,13 +38,7 @@ export default function StatusModal({
             exit={{ scale: 0.8, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
           >
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 cursor-pointer"
-            >
-              <X size={18} />
-            </button>
-
+            
             <div className="flex justify-center mb-4">
               {isSuccess ? (
                 <CheckCircle className="w-14 h-14 text-green-500" />
@@ -55,7 +49,7 @@ export default function StatusModal({
 
             <h2
               className={`text-xl font-semibold text-center mb-2 ${
-                isSuccess ? "text-green-600" : "text-error-color"
+                isSuccess ? "text-heading-color" : "text-heading-color"
               }`}
             >
               {title}
