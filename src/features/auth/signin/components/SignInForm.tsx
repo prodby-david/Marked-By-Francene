@@ -191,7 +191,7 @@ export function SignInFormUI() {
 
       {loading && (
         <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
-          <MakeupLoader text="Preparing your glam..." />
+          <MakeupLoader text="Signing in..." />
         </div>
       )}
 
