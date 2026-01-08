@@ -67,8 +67,8 @@ export function SignInFormUI() {
       setModal({
         open: true,
         type: "success",
-        title: "Welcome back 💄",
-        message: "You have successfully signed in.",
+        title: "Sign in successful",
+        message: "Press confirm to continue to your dashboard.",
       });
         
       setShouldRedirect(true);
