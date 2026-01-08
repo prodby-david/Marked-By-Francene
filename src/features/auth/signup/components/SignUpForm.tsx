@@ -9,6 +9,7 @@ import { signIn } from "next-auth/react";
 import MakeupLoader from "@/shared/components/loader/loader";
 import { useSignUp } from "../index";
 import StatusModal from "@/shared/components/modals/modal";
+import { useRouter } from "next/navigation";
 
 
 
@@ -23,7 +24,9 @@ type FormState = {
 type Errors = Record<string, string>;
 
 export default function SignUpForm() {
+
   const { signUp, loading } = useSignUp();
+  const router = useRouter();
 
   const initialForm: FormState = {
     firstname: "",
@@ -44,6 +47,7 @@ export default function SignUpForm() {
   const [errors, setErrors] = useState<Errors>({});
 
   function validate(values: FormState): Errors {
+
     if (!values.firstname.trim()) {
       return { firstname: "First name is required" };
     }
@@ -123,7 +127,7 @@ export default function SignUpForm() {
 
 
   const border = (key: string) =>
-    errors[key] ? "border-red-500" : "border-input-color";
+  errors[key] ? "border-red-500" : "border-input-color";
 
   const hasErrors = Object.keys(errors).length > 0;
 
@@ -269,7 +273,13 @@ export default function SignUpForm() {
         type={modal.type}
         title={modal.title}
         message={modal.message}
-        onClose={() => setModal(prev => ({ ...prev, open: false }))}
+         onClose={() => {
+    setModal(prev => ({ ...prev, open: false }));
+
+    if (modal.type === "success") {
+      router.push("/signin");
+    }
+  }}
       />
 
     </div>
