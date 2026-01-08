@@ -175,7 +175,7 @@ export function SignInFormUI() {
             type="button"
             onClick={handleGoogleSignIn}
             disabled={loading || redirectLoading}
-            className="w-full flex items-center justify-center gap-3 border rounded-xl py-2 text-sm cursor-pointer transition ease-in-out hover:shadow-sm duration-300"
+            className="w-full flex items-center justify-center gap-3 border rounded-xl py-2 text-sm cursor-pointer transition ease-in-out hover:shadow-sm duration-300 font-medium "
           >
             <Image
               src="/images/google-icon.svg"
